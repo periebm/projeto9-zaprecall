@@ -32,9 +32,15 @@ export default function Cards(props) {
         }  
     }
 
+    function changeQuestion(){
+        if(turned === false) return `Pergunta ${index + 1}`
+        else if(turned === true && clickedTwice===false) return card.question
+        else if(turned === true && clickedTwice===true) return card.answer
+    }
+
     return (
         <SingleCard data-test="flashcard" key={card} turned={turned} clickedTwice={clickedTwice} cardStatus={cardStatus} >
-            <h2 data-test="flashcard-text" > {turned ? `${card.question}` : `Pergunta ${index + 1}`} </h2>
+            <h2 data-test="flashcard-text" > {changeQuestion()} </h2>
             
             <ion-icon data-test={changeDataTest()} onClick={() => turnCard(card)} name={setIcon()}>
             </ion-icon>
