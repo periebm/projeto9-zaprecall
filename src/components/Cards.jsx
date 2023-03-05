@@ -1,25 +1,48 @@
 import styled from "styled-components"
-import arrow from "../assets/arrow.png"
-import turn from "../assets/turn.png"
 
 export default function Cards(props) {
-    const { card, index, turned, turnCard, clickedTwice } = props;  //passar prop de visibilidade
+    const { card, index, turned, turnCard, clickedTwice, clickedButton, cardStatus } = props;  //passar prop de visibilidade
 
+    
+    function setIcon(){
+            if(cardStatus === ""){ 
+                if(turned === true) {
+                    return "reload-outline"
+                }
+                else return "play-outline"
+            }
+            else{
+                if(cardStatus === "Zap!") return "checkmark-circle"
+                else if(cardStatus === "Quase não lembrei") return "help-circle"
+                else if(cardStatus === "Não lembrei") return "close-circle"
+            }        
+    }
 
+    function changeDataTest(){
+        if(cardStatus === ""){ 
+            if(turned === true) {
+                return "turn-btn"
+            }
+            else return "play-btn"
+        }
+        else{
+            if(cardStatus === "Zap!") return "zap-icon"
+            else if(cardStatus === "Quase não lembrei") return "partial-icon"
+            else if(cardStatus === "Não lembrei") return "no-icon"
+        }  
+    }
 
     return (
-        <SingleCard key={card} turned={turned} >
-            <Text> {turned ? `${card.question}` : `Pergunta ${index + 1}`} </Text>
-
-            <Symbol 
-                clickedTwice={clickedTwice}
-                onClick={() => turnCard(card)}
-                src={turned ? turn : arrow} />
+        <SingleCard data-test="flashcard" key={card} turned={turned} clickedTwice={clickedTwice} cardStatus={cardStatus} >
+            <h2 data-test="flashcard-text" > {turned ? `${card.question}` : `Pergunta ${index + 1}`} </h2>
+            
+            <ion-icon data-test={changeDataTest()} onClick={() => turnCard(card)} name={setIcon()}>
+            </ion-icon>
 
             <Options clickedTwice={clickedTwice}>
-                <button>Não lembrei</button>
-                <button>Quase não lembrei</button>
-                <button>Zap!</button>
+                <button data-test="no-btn" onClick={() => clickedButton(card, "Não lembrei")}>Não lembrei</button>
+                <button data-test="partial-btn" onClick={() => clickedButton(card, "Quase não lembrei")}>Quase não lembrei</button>
+                <button data-test="zap-btn" onClick={() => clickedButton(card, "Zap!")}>Zap!</button>
             </Options>
 
         </SingleCard>
@@ -38,31 +61,33 @@ const SingleCard = styled.div`
     height: ${({ turned }) => turned ? "131px" : "65px"};
     align-items: ${props => props.turned ? "" : "center"};
     display: ${props => props.turned ? "" : "flex"};
+    color: ${props => {
+            if(props.cardStatus === "Zap!") return "#2FBE34;"
+            else if(props.cardStatus === "Quase não lembrei") return '#FF922E;'
+            else if(props.cardStatus === "Não lembrei") return "#FF3030;"
+            else return "#333333;"
+        }    
+       };
 
     h2{
         font-weight: ${props => props.turned ? "400" : "700"};
         margin-top: ${props => props.turned && "18px"};
+        margin-left: 15px;
+        text-decoration: ${props => props.cardStatus && "line-through"};
+        font-size: 16px;
     }
 
-    img{
-        display: ${props => props.turned && "flex"};
+    ion-icon{
+        ${props =>  
+            { if(props.clickedTwice === true) return 'display: none;'
+              else if(props.turned === true && props.clickedTwice===false) return 'display: flex;'
+              else return ''} };
         position: ${props => props.turned && "absolute"};
         bottom: ${props => props.turned && "6px"};
         right: ${props => props.turned && "0"};
-        height: ${props => props.turned && "20px"};
-    }
-`
-
-const Text = styled.h2`
-        margin-left: 15px;
-        color: #333333;
-        font-size: 16px;
-`
-
-const Symbol = styled.img`
-        height: 23px;
+        font-size: ${props => props.turned ? "28px" : "30px"};
         margin-right: 15px;
-        //display: ${props => props.clickedTwice ? "none" : "block"};
+    }
 `
 
 const Options = styled.div`

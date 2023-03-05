@@ -1,5 +1,5 @@
+import { useState } from "react";
 import styled from "styled-components";
-import Footer from "./components/Footer";
 import ListCards from "./components/ListCards";
 import Title from "./components/Title";
 
@@ -19,10 +19,8 @@ export default function App() {
   return (
     <Background>
       <Title/>
-      <ListCards 
-        deck={deck} 
+      <ListCards deck={deck} 
       />
-      <Footer/>
     </Background>
   )
 }

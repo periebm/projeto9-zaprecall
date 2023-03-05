@@ -1,11 +1,12 @@
 import styled from "styled-components"
 
 
-export default function Footer(){
+export default function Footer(props){
     return(
         <>
-        <Foot>
-            0/4 CONCLUÍDOS
+        <Foot data-test="footer">
+            {props.concluded}
+            /{props.deck_length} CONCLUÍDOS
         </Foot>
         </>
     )
